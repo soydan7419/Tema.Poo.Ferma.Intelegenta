@@ -157,22 +157,112 @@ public:
     }
 };
 
+class Crop {
+private:
+    string type;
+    int amount;
+    int quality;
+public:
+    Crop(string type_, int amount_, int quality_) {
+        type = type_;
+        amount = amount_;
+        quality = quality_;
+    }
+    string get_type() {
+        return type;
+    }
+    int get_amount() {
+        return amount;
+    }
+    int get_quality() {
+        return quality;
+    }
+};
+
+
 class Harvester : public AgricultureTool {
+    
 private:
     int harvest_status;
+    int fuel_usage;
+
 public:
     Harvester(int year_) : AgricultureTool("Harvester", year_) {
         harvest_status = 0;
+        fuel_usage = 0;
     }
     void show_information() {
         cout << "type: " << type << endl;
         cout << "year: " << year << endl;
-
+        cout << "harvest_status: " << harvest_status << endl;
     }
     void refuel(int amount) {
         cout << "refueled." << endl;
     }
-    void plow_soil() {
-        cout << "plow soil." << endl;
+    void harvest(vector<Crop>& crops) {
+        cout << "harvesting crops." << endl;
+        harvest_status = 100;
+
+        int total_crop_amount = 0;
+        int total_crop_quality = 0;
+        for (int i = 0; i < crops.size(); i++) {
+            total_crop_amount += crops[i].get_amount();
+            total_crop_quality += crops[i].get_quality();
+        }
+
+        double payment = 0;
+        if (total_crop_amount > 0) {
+            double average_quality = (double)total_crop_quality / total_crop_amount;
+            payment = total_crop_amount * average_quality * 0.1; // Calculation of amount payable
+        }
+
+        cout << "Payment: $" << payment << endl;
+    }
+    void use_fuel(int amount) {
+        fuel_usage += amount;
+    }
+    int get_fuel_usage() {
+        return fuel_usage;
     }
 };
+
+int main() {
+    // Let's create a new Cow and Chicken object
+    Cow myCow(3);
+    Chicken myChicken(1);
+
+    // Let's show the information
+    myCow.show_information();
+    myChicken.show_information();
+
+    // Let's feed the animals
+    myCow.feed();
+    myChicken.feed();
+
+    // Let's show the information again
+    myCow.show_information();
+    myChicken.show_information();
+
+    // Let's collect chicken eggs
+    myChicken.collect_eggs();
+    myChicken.collect_eggs();
+    myChicken.collect_eggs();
+
+    // Let's create a new Harvester object
+    Harvester myHarvester(2022);
+
+    // Let's show the information
+    myHarvester.show_information();
+
+    // Let's use the tractor
+    tractor myTractor(2021);
+
+    // Let's show the information
+    myTractor.show_information();
+
+    // Let's use the tractor to plow the land
+    myTractor.plow_soil();
+
+    return 0;
+}
+
